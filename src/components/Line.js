@@ -1,7 +1,6 @@
 import { LineChart } from '@mui/x-charts/LineChart';
-import { toLocaleString, useEffect, useState } from 'react';
-import dataSet from './obj';
-import DatePickers from './DatePicker';
+import { useEffect, useState } from 'react';
+import dataSet from '../obj';
 import { useSearchParams } from 'react-router-dom';
 
 export default function Line({ changeFeature }) {

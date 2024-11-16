@@ -1146,3 +1146,62 @@ const dataSet = [
 ]
 
 export default dataSet
+
+
+// const a = () => {
+
+//     // only gender
+//     if (gender && !(fromDate && toDate)) {
+//         // console.log(" only gender")
+//         if (item.Gender === gender) {
+//             fil = fil.map((e) =>
+//                 (Object.keys(item).includes(e.name)) ?
+//                     { name: e.name, totalTime: e.totalTime + item[e.name] } : e
+//             )
+//         }
+//     }
+
+
+//     // only age
+//     else if (!gender && !(fromDate && toDate) && age) {
+
+//         // console.log(" only gender")
+//         if (item.Age === age) {
+//             fil = fil.map((e) =>
+//                 (Object.keys(item).includes(e.name)) ?
+//                     { name: e.name, totalTime: e.totalTime + item[e.name] } : e
+//             )
+//         }
+
+//     }
+
+//     // only date
+//     else if (!gender && (fromDate && toDate)) {
+
+//         // console.log(" only date")
+
+//         let date = new Date(item.Day)
+//         date = date.getTime()
+//         if (date >= fromDate && date <= toDate) {
+//             fil = fil.map((e) =>
+//                 (Object.keys(item).includes(e.name)) ?
+//                     { name: e.name, totalTime: e.totalTime + item[e.name] } : e
+//             )
+//         }
+
+//     }
+
+//     // all
+//     else {
+//         // console.log("both")
+//         let date = new Date(item.Day)
+//         date = date.getTime()
+
+//         if ((item.Gender === gender) && (date >= fromDate && date <= toDate) && (item.Age === age)) {
+//             fil = fil.map((e) =>
+//                 (Object.keys(item).includes(e.name)) ?
+//                     { name: e.name, totalTime: e.totalTime + item[e.name] } : e
+//             )
+//         }
+//     }
+// }

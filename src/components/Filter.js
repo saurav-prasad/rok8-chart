@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-const DatePicker2 = () => {
+const Filter = () => {
     const [searchParams, setSearchParams] = useSearchParams()
     const [gender, setGender] = useState("None");
     const [age, setAge] = useState("None");
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
+    const [isCookiesPresent, setIsCookiesPresent] = useState(() => localStorage.getItem("preferences") ? true : false)
 
     const handleSerachParams = (newParams) => {
         // console.log(newParams)
@@ -59,6 +60,7 @@ const DatePicker2 = () => {
         // console.log(searchParams.get("gender"))
     };
 
+    // date filter
     const handleStartDate = (newValue) => {
         const date = newValue.target.value
         if (newValue.target.value) {
@@ -69,7 +71,7 @@ const DatePicker2 = () => {
             deleteSerachParams("startDate")
         }
     }
-
+    // date filter
     const handleEndDate = (newValue) => {
         const date = newValue.target.value
         if (newValue.target.value) {
@@ -84,6 +86,7 @@ const DatePicker2 = () => {
     const deletePreferences = (e) => {
         e.preventDefault()
         localStorage.removeItem("preferences")
+        setIsCookiesPresent(false)
     }
     const savePreferences = (e) => {
         e.preventDefault()
@@ -91,16 +94,10 @@ const DatePicker2 = () => {
             const newParams = new URLSearchParams(searchParams);
             const paramsEntries = Object.fromEntries(newParams.entries());
             localStorage.setItem("preferences", JSON.stringify(paramsEntries))
+            setIsCookiesPresent(true)
         }
     }
 
-    // useEffect(() => {
-    //     if (Array.from(searchParams.keys()).length > 0) {
-    //         const newParams = new URLSearchParams(searchParams);
-    //         const paramsEntries = Object.fromEntries(newParams.entries());
-    //         localStorage.setItem("preferences", JSON.stringify(paramsEntries))
-    //     }
-    // }, [searchParams])
 
     useEffect(() => {
         if (searchParams.get("age")) setAge(searchParams.get("age"))
@@ -114,7 +111,7 @@ const DatePicker2 = () => {
 
     return (
         <>
-            <div className='border border-[#ccc] w-[80vw] sm:w-fit rounded-lg mt-2 px-3 py-2 flex flex-col space-y-3'>
+            <div className='border border-[#ccc] w-[80vw] sm:w-fit rounded-lg mt-2 px-3 py-2 flex flex-col space-y-3 mb-2'>
                 <div className='flex space-x-2 justify-center items-center'>
                     <input value={startDate} onChange={handleStartDate} className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6" type="date" name="" id="" />
                     <h1>To</h1>
@@ -178,11 +175,16 @@ const DatePicker2 = () => {
                         type="submit"
                         className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                     >
-                        Save cookies
+                        {isCookiesPresent ? "Update cookies" : "Save cookies"}
                     </button>
                 </div>
-            </div>
+                {isCookiesPresent &&
+                    <label label className="text-[#298683] text-center text-sm font-medium">
+                        Cookies Available
+                    </label>
+                }
+            </div >
         </>
     )
 }
-export default DatePicker2
+export default Filter
