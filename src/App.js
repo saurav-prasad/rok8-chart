@@ -1,18 +1,23 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Home from './components/Home';
 import Auth from './components/Auth';
 import ErrorPage from "./components/ErrorPage"
 import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { setDataset } from './redux/functions/dataset'
 
 function App() {
-  const [dataSet, setDataSet] = useState([])
+  const dispatch = useDispatch()
 
   useEffect(() => {
     async function fetchData() {
-      const result = await axios.get(process.env.REACT_APP_DATASET_API)
-      // console.log(result.data)
-      setDataSet([...result.data])
+      try {
+        const result = await axios.get(process.env.REACT_APP_DATASET_API)
+        dispatch(setDataset([...result.data]))
+      } catch (error) {
+        console.error(error)
+      }
     }
     fetchData()
   }, [])
@@ -20,7 +25,7 @@ function App() {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <Home dataSet={dataSet} />
+      element: <Home />
     },
     {
       path: "/auth",

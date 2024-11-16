@@ -1,14 +1,14 @@
 import { LineChart } from '@mui/x-charts/LineChart';
 import { useEffect, useState } from 'react';
-import dataSet from '../obj';
+import { useSelector } from 'react-redux';
 import { useSearchParams } from 'react-router-dom';
 
-export default function Line({ changeFeature }) {
+export default function Line() {
     const [xData, setXData] = useState([])
     const [yData, setYData] = useState([])
     const [searchParams, setSearchParams] = useSearchParams()
-
-    const feature = changeFeature
+    const dataSet = useSelector(state => state.datasetSlice)
+    const [feature, setFeature] = useState(() => searchParams.get("feature"))
 
     const handleClose = (e) => {
         // Create a copy of the current search parameters
@@ -26,61 +26,97 @@ export default function Line({ changeFeature }) {
     };
 
     useEffect(() => {
+        setFeature(searchParams.get("feature"))
+    }, [searchParams])
+
+
+    useEffect(() => {
+        // given parameters
         const gender = searchParams.get("gender")
         let fromDate = searchParams.get("startDate")
         fromDate = new Date(fromDate).getTime()
         let toDate = searchParams.get("endDate")
         toDate = new Date(toDate).getTime()
+        const isDate = fromDate && toDate
         const age = searchParams.get("age")
 
-        const feature = searchParams.get('feature')
-        if (gender || (fromDate && toDate)) {
+        if (gender || (fromDate && toDate) || age) {
             let x = []
             let y = []
-
-            dataSet.map((e) => {
+            dataSet.forEach((item) => {
+                //  console.log(item)
+                // Check filters
+                const matchesGender = item.Gender === gender
+                const matchesAge = item.Age === age
+                let date = new Date(item.Day)
+                const matchesDate = date >= fromDate && date <= toDate
 
                 // only gender
-                if (gender && !(fromDate && toDate)) {
-                    // console.log(" only gender")
-                    if (e.Gender === gender) {
-                        let date = new Date(e.Day)
+                if (gender && !isDate && !age) {
+                    if (matchesGender) {
                         const dateString = `${date?.getDate()}-${date?.toLocaleString('default', { month: 'short' })}`
                         x = [...x, dateString]
-                        let totalTime = e[feature]
+                        let totalTime = item[feature]
+                        y = [...y, totalTime]
+                    }
+                }
+
+                // only age
+                else if (age && !gender && !isDate) {
+                    if (matchesAge) {
+                        const dateString = `${date?.getDate()}-${date?.toLocaleString('default', { month: 'short' })}`
+                        x = [...x, dateString]
+                        let totalTime = item[feature]
                         y = [...y, totalTime]
                     }
                 }
 
                 // only date
-                else if (!gender && (fromDate && toDate)) {
-
-                    // console.log(" only date")
-
-                    let date = new Date(e.Day)
-                    date = date?.getTime()
-
-                    if (date >= fromDate && date <= toDate) {
-                        let date = new Date(e.Day)
+                else if (isDate && !age && !gender) {
+                    if (matchesDate) {
                         const dateString = `${date?.getDate()}-${date?.toLocaleString('default', { month: 'short' })}`
                         x = [...x, dateString]
-                        let totalTime = e[feature]
+                        let totalTime = item[feature]
                         y = [...y, totalTime]
                     }
-
                 }
 
-                // both
-                else {
-                    // console.log("both")
-                    let date = new Date(e.Day)
-                    date = date?.getTime()
-
-                    if ((e.Gender === gender) && (date >= fromDate && date <= toDate)) {
-                        let date = new Date(e.Day)
+                // gender + age
+                else if (gender && age && !isDate) {
+                    if (matchesGender && matchesAge) {
                         const dateString = `${date?.getDate()}-${date?.toLocaleString('default', { month: 'short' })}`
                         x = [...x, dateString]
-                        let totalTime = e[feature]
+                        let totalTime = item[feature]
+                        y = [...y, totalTime]
+                    }
+                }
+
+                // gender + Date
+                else if (gender && isDate && !age) {
+                    if (matchesGender && matchesDate) {
+                        const dateString = `${date?.getDate()}-${date?.toLocaleString('default', { month: 'short' })}`
+                        x = [...x, dateString]
+                        let totalTime = item[feature]
+                        y = [...y, totalTime]
+                    }
+                }
+
+                // age + Date
+                else if (age && isDate && !gender) {
+                    if (matchesAge && matchesDate) {
+                        const dateString = `${date?.getDate()}-${date?.toLocaleString('default', { month: 'short' })}`
+                        x = [...x, dateString]
+                        let totalTime = item[feature]
+                        y = [...y, totalTime]
+                    }
+                }
+
+                // all
+                else {
+                    if (matchesGender && matchesDate && matchesAge) {
+                        const dateString = `${date?.getDate()}-${date?.toLocaleString('default', { month: 'short' })}`
+                        x = [...x, dateString]
+                        let totalTime = item[feature]
                         y = [...y, totalTime]
                     }
                 }
@@ -92,18 +128,21 @@ export default function Line({ changeFeature }) {
         } else {
             let x = []
             let y = []
-            dataSet.map((e) => {
-                let date = new Date(e.Day)
+            dataSet.forEach((item) => {
+                let date = new Date(item.Day)
                 date = `${date.getDate()}-${date.toLocaleString('default', { month: 'short' })}`
                 x = [...x, date]
-                let totalTime = e[feature]
+                let totalTime = item[feature]
                 y = [...y, totalTime]
             })
             setXData(x)
             setYData(y)
         }
 
-    }, [searchParams])
+    }, [searchParams, dataSet])
+
+
+
 
     return (
         <>
@@ -119,7 +158,6 @@ export default function Line({ changeFeature }) {
                     xAxis={[{ data: xData, scaleType: "point" }]}
                     grid={{ horizontal: true }}
                 />
-                {/* </div> */}
             </div>
         </>
     );

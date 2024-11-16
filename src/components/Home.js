@@ -1,6 +1,5 @@
 import { BarChart } from '@mui/x-charts/BarChart';
 import React, { useEffect, useState } from 'react';
-// import dataSet from '../obj';
 import Filters from './Filter';
 import Line from './Line';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -8,15 +7,14 @@ import { useDispatch, useSelector, } from 'react-redux';
 import { authRoute } from '../apis/axios'
 import Nav from './Nav';
 import { login } from '../redux/functions/auth';
-import axios from 'axios';
 
-function Home({ dataSet }) {
+function Home() {
   const [feature, setFeature] = useState("A")
-  // const [dataSet, setDataSet] = useState([])
   const [searchParams, setSearchParams] = useSearchParams()
   const [data, setData] = useState([])
   const navigate = useNavigate()
   const { user } = useSelector(state => state.authSlice)
+  const dataset = useSelector(state => state.datasetSlice)
   const dispatch = useDispatch()
 
   const chartSetting = {
@@ -50,7 +48,7 @@ function Home({ dataSet }) {
       let fil = initializeFil()
 
       //  filtering items based on given parameters
-      dataSet.forEach((item) => {
+      dataset.forEach((item) => {
 
         // Check filters
         const matchesGender = item.Gender === gender
@@ -82,7 +80,7 @@ function Home({ dataSet }) {
         }
 
         // only date
-        else if (isDate && !age && !isDate) {
+        else if (isDate && !age && !gender) {
           if (matchesDate) {
             fil = fil.map((e) =>
               (Object.keys(item).includes(e.name)) ?
@@ -137,7 +135,7 @@ function Home({ dataSet }) {
     } else {
       let fil = initializeFil()
 
-      dataSet.forEach((e) => {
+      dataset.forEach((e) => {
         fil = fil.map((item) =>
           (Object.keys(e).includes(item.name)) ?
             { name: item.name, totalTime: item.totalTime + e[item.name] } : item
@@ -145,7 +143,7 @@ function Home({ dataSet }) {
       })
       setData([...fil])
     }
-  }, [searchParams, dataSet])
+  }, [searchParams, dataset])
 
   useEffect(() => {
     // window.location.replace(`name?saurav`);
@@ -210,7 +208,7 @@ function Home({ dataSet }) {
         <Nav />
         <div className='h-screen z-[2] p-1 flex flex-col xl:h-screen w-full justify-start xl:justify-center items-center'>
 
-          {dataSet.length > 0 ?
+          {dataset.length > 0 ?
             <BarChart
               onAxisClick={handleBarClick}
               dataset={data}
@@ -229,7 +227,6 @@ function Home({ dataSet }) {
           }
 
           <Filters />
-          {/* <DatePickers onAgeChange={onAgeChange} onGenderChange={onGenderChange} getStartDate={getStartDate} getEndDate={getEndDate} /> */}
         </div>
         {searchParams.get("feature") && <Line changeFeature={feature} />}
       </div>
