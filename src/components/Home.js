@@ -153,7 +153,7 @@ function Home({ dataSet }) {
 
     // Only redirect if preferences exist in localStorage
     if (storedPreferences) {
-      console.log(storedPreferences)
+      // console.log(storedPreferences)
       try {
         const preferences = JSON.parse(storedPreferences);
 
@@ -211,7 +211,6 @@ function Home({ dataSet }) {
         <div className='h-screen z-[2] p-1 flex flex-col xl:h-screen w-full justify-start xl:justify-center items-center'>
 
           {dataSet.length > 0 ?
-
             <BarChart
               onAxisClick={handleBarClick}
               dataset={data}
@@ -221,7 +220,12 @@ function Home({ dataSet }) {
               grid={{ vertical: true, horizontal: true }}
               {...chartSetting}
             /> :
-            <h1 className='text-5xl my-9'>Loading please wait...</h1>
+            <div className='my-9 flex space-x-2 justify-center items-center'>
+              {/* <p className='text-gray-900 text-2xl font-medium mr-10'>Loading chart</p> */}
+              <div>
+                <span class="loader2"></span>
+              </div>
+            </div>
           }
 
           <Filters />

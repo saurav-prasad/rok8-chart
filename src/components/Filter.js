@@ -112,10 +112,10 @@ const Filter = () => {
     return (
         <>
             <div className='border border-[#ccc] w-[80vw] sm:w-fit rounded-lg mt-2 px-3 py-2 flex flex-col space-y-3 mb-2'>
-                <div className='flex space-x-2 justify-center items-center'>
-                    <input value={startDate} onChange={handleStartDate} className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6" type="date" name="" id="" />
-                    <h1>To</h1>
-                    <input value={endDate} onChange={handleEndDate} className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6" type="date" name="" id="" />
+                <div className='flex sm:space-x-2 space-x-2 justify-center items-center'>
+                    <input value={startDate} onChange={handleStartDate} className="block rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6 sm:w-full w-[40%]" type="date" name="" id="" />
+                    <h1 className='sm:w-auto w-[10%]'>To</h1>
+                    <input value={endDate} onChange={handleEndDate} className="block rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6 sm:w-full w-[40%]" type="date" name="" id="" />
                 </div>
                 {/* gender */}
                 <div>
